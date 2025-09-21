@@ -1,0 +1,17 @@
+# Define os serviços (contêineres) que compõem nossa aplicação.
+services:
+  # Serviço do back-end
+  backend:
+    # Instrui o Compose a construir a imagem usando o Dockerfile na pasta ./backend
+    build: ./backend
+    ports:
+      # Mapeia a porta 3001 da sua máquina para a porta 3001 do contêiner.
+      - "3001:3001"
+
+  # Serviço do front-end
+  frontend:
+    # Constrói a imagem usando o Dockerfile na pasta ./frontend
+    build: ./frontend
+    ports:
+      # Mapeia a porta 3000 da sua máquina para a porta 80 do contêiner Nginx.
+      - "3000:80"
