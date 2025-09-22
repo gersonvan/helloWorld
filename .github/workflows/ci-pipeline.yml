@@ -8,7 +8,6 @@ on:
 
 # Define os jobs que o workflow executará
 jobs:
-  # Nome do nosso job
   build-e-validacao:
     # O tipo de máquina virtual que o job rodará
     runs-on: ubuntu-latest
@@ -19,15 +18,15 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # 2. Configura o Docker Compose para ser usado nos passos seguintes
-      - name: Setup Docker Compose
+      # 2. (CORREÇÃO) Configura o QEMU, necessário para o passo seguinte
+      - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
 
-      # 3. Executa o build das imagens Docker via Docker Compose
-      # Este passo valida se os Dockerfiles estão corretos e se a aplicação pode ser empacotada.
-      # É o nosso principal teste de integração nesta fase.
-      - name: Build das imagens Docker
-        run: docker-compose build
+      # 3. (CORREÇÃO) Configura o Docker Buildx, a ferramenta moderna de build do Docker
+      # Esta action prepara o ambiente e habilita o comando 'docker compose'
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # (Opcional) Você pode adicionar mais passos aqui no futuro,
-      # como a execução de testes unitários (npm test) ou análise de código.
+      # 4. (CORREÇÃO) Executa o build usando o comando 'docker compose' (com espaço)
+      - name: Build das imagens Docker com Compose V2
+        run: docker compose build
