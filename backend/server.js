@@ -7,7 +7,7 @@ const port = 3001;
 app.use(cors()); // <-- 2. USE O CORS COMO MIDDLEWARE
 
 app.get('/api', (req, res) => {
-  res.send('Hello World from the back-end! Testando de novo');
+  res.send('A mensagem do back-end foi atualizada via pipeline!');
 });
 
 app.listen(port, () => {
