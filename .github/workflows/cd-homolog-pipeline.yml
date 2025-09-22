@@ -1,0 +1,23 @@
+# Nome do workflow
+name: CD - Deploy para Homologação
+
+# Gatilho: rodar sempre que houver um push na branch 'develop'
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  deploy-homolog:
+    runs-on: ubuntu-latest
+    steps:
+      # Em um cenário real, os passos aqui seriam:
+      # 1. Checkout do código
+      # 2. Login em um registro de contêineres (Docker Hub, GHCR, Azure CR)
+      # 3. Build e Push das imagens Docker para o registro
+      # 4. Conexão com o servidor de homologação (ex: via SSH)
+      # 5. Execução de um script para parar os contêineres antigos,
+      #    puxar as novas imagens e iniciar os novos contêineres (docker-compose pull && docker-compose up -d)
+
+      # Para nosso laboratório, vamos simular o deploy com uma mensagem.
+      - name: Simulação de Deploy para Homologação
+        run: echo "🚀 Deploy da nova versão para o ambiente de Homologação realizado com sucesso!"
