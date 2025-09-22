@@ -1,0 +1,33 @@
+# Nome do workflow que aparecerá na aba "Actions" do GitHub
+name: CI - Build e Teste
+
+# Define o gatilho: rodar em Pull Requests direcionados à branch 'develop'
+on:
+  pull_request:
+    branches: [ develop ]
+
+# Define os jobs que o workflow executará
+jobs:
+  # Nome do nosso job
+  build-e-validacao:
+    # O tipo de máquina virtual que o job rodará
+    runs-on: ubuntu-latest
+
+    # Os passos que compõem o job
+    steps:
+      # 1. Faz o checkout do código do seu repositório para a máquina virtual
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configura o Docker Compose para ser usado nos passos seguintes
+      - name: Setup Docker Compose
+        uses: docker/setup-qemu-action@v3
+
+      # 3. Executa o build das imagens Docker via Docker Compose
+      # Este passo valida se os Dockerfiles estão corretos e se a aplicação pode ser empacotada.
+      # É o nosso principal teste de integração nesta fase.
+      - name: Build das imagens Docker
+        run: docker-compose build
+
+      # (Opcional) Você pode adicionar mais passos aqui no futuro,
+      # como a execução de testes unitários (npm test) ou análise de código.
