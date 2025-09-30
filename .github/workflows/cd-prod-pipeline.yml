@@ -1,0 +1,24 @@
+# Nome do workflow
+name: CD - Deploy para Produção
+
+# Gatilho: rodar somente quando uma nova "Release" for publicada no GitHub
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy-producao:
+    runs-on: ubuntu-latest
+    steps:
+      # Em um cenário real, os passos seriam similares aos de homologação,
+      # porém usando credenciais e ambientes de produção (Azure, AWS, etc.).
+      # Ex: Conectar na Azure, fazer push da imagem para o Azure Container Registry,
+      # e atualizar o serviço de aplicação para usar a nova imagem.
+
+      # Para nosso laboratório, vamos simular o deploy usando a tag da release.
+      - name: Simulação de Deploy para Produção
+        # A variável ${{ github.event.release.tag_name }} pega o nome da versão (ex: v1.0.0) que acionou o workflow.
+        run: echo "🚀 DEPLOYANDO VERSÃO ${{ github.event.release.tag_name }} PARA O AMBIENTE DE PRODUÇÃO..."
+
+      - name: Deploy concluído
+        run: echo "✅ Versão ${{ github.event.release.tag_name }} implantada com sucesso em Produção."
