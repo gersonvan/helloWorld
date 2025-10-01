@@ -21,7 +21,7 @@ function App() {
   // O JSX que será renderizado na tela.
   return (
     <div style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'sans-serif' }}>
-      <h1>Aplicação de Teste DevOps</h1>
+      <h1>Teste de Integração com Azure</h1>
       <p>A mensagem recebida do nosso back-end é:</p>
       <p style={{ fontSize: '24px', color: '#007BFF', fontWeight: 'bold' }}>
         {/* Exibe a mensagem guardada no estado ou "Carregando..." se ainda não chegou */}
