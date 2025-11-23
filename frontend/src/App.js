@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     // A função fetch() do navegador busca dados de uma URL.
     // Apontamos para a rota que criamos no nosso back-end.
-    fetch('http://localhost:3001/api')
+    fetch('process.env.REACT_APP_API_URL')
       .then(response => response.text()) // Converte a resposta para texto
       .then(data => setMensagemApi(data)) // Atualiza o estado 'mensagemApi' com os dados recebidos
       .catch(error => console.error('Erro ao buscar dados da API:', error)); // Captura erros

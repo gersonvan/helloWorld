@@ -1,0 +1,71 @@
+# Nome do workflow
+name: Pipeline Principal (CI e CD para Homologação)
+
+# Variáveis de ambiente para fácil manutenção
+env:
+  ACR_NAME: ${{ secrets.ACR_LOGIN_SERVER }}
+  # IMPORTANTE: Altere os valores abaixo para os nomes dos seus App Services
+  APP_FRONTEND_NAME: 'app-helloworld-frontend-homolog-gerson'
+  APP_BACKEND_NAME: 'app-helloworld-backend-homolog-gerson'
+
+# Gatilho: rodar em push para a branch 'develop'
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Faz o checkout do código
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Faz o login na Azure usando a Entidade de Serviço
+      - name: Login na Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # 3. Faz o login no Azure Container Registry
+      - name: Login no ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ACR_NAME }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # 4. Build e Push da imagem do Back-end
+      #    Etiquetamos com o SHA do commit para unicidade e com 'latest' para o deploy
+      - name: Build e Push do Back-end
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ env.ACR_NAME }}/backend:${{ github.sha }}
+            ${{ env.ACR_NAME }}/backend:latest
+
+      # 5. Build e Push da imagem do Front-end
+      - name: Build e Push do Front-end
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ env.ACR_NAME }}/frontend:${{ github.sha }}
+            ${{ env.ACR_NAME }}/frontend:latest
+
+      # 6. Deploy no Serviço de Aplicativo do Back-end
+      - name: Deploy do Back-end
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_BACKEND_NAME }}
+          images: '${{ env.ACR_NAME }}/backend:${{ github.sha }}'
+
+      # 7. Deploy no Serviço de Aplicativo do Front-end
+      - name: Deploy do Front-end
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.APP_FRONTEND_NAME }}
+          images: '${{ env.ACR_NAME }}/frontend:${{ github.sha }}'
